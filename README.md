@@ -162,7 +162,41 @@
 
 1. Menghitung Nilai Unik
 
-  Pada tahap ini dilakukan penghitungan jumlah nilai unik pada beberapa kolom dalam dataset untuk memahami variasi dan distribusi data di masing-masing kolom tersebut. Dengan mengetahui jumlah nilai unik, kita dapat menilai tingkat keberagaman data. Hasil analisis menunjukkan bahwa kolom id universitas memiliki 87 nilai unik, kolom id jurusan memiliki 1290 nilai unik, dan kolom id pengguna memiliki 61.202 nilai unik.
+Dalam dataset yang berisi 61.202 entri, terdapat lima kolom yang berkaitan dengan identitas pengguna serta pilihan program studi dan universitas, yaitu id_first_major, id_first_university, id_second_major, id_second_university, dan id_user. Berikut ini merupakan hasil analisis nilai unik dari masing-masing kolom tersebut:
+
+### id_first_major (Jumlah unik: 1290)
+
+- Kolom ini merepresentasikan pilihan program studi pertama yang dipilih oleh pengguna.
+
+- Terdapat 1.290 jenis program studi berbeda yang dipilih sebagai pilihan pertama.
+
+- Nilai ini menunjukkan variasi yang cukup tinggi dalam minat studi awal dari pengguna.
+
+### id_first_university (Jumlah unik: 87)
+
+- Kolom ini mencatat universitas pertama yang menjadi pilihan pengguna.
+
+- Terdapat 87 universitas berbeda yang tercatat sebagai pilihan pertama.
+
+- Ini menunjukkan bahwa pengguna memiliki beragam preferensi universitas dalam pilihan pertamanya.
+
+### id_second_major (Jumlah unik: 1353)
+
+- Kolom ini menunjukkan program studi kedua yang dipilih oleh pengguna (jika ada).
+
+- Terdapat 1.353 jenis program studi berbeda sebagai pilihan kedua, bahkan lebih banyak dari pilihan pertama, yang dapat mengindikasikan bahwa pengguna mengeksplorasi lebih banyak opsi pada pilihan kedua.
+
+### id_second_university (Jumlah unik: 86)
+
+- Kolom ini menyimpan data universitas pilihan kedua pengguna.
+
+- Terdapat 86 universitas berbeda yang dipilih pada pilihan kedua, sedikit lebih sedikit dibanding pilihan pertama.
+
+### id_user (Jumlah unik: 61.202)
+
+- Kolom ini merupakan identitas unik setiap pengguna dalam dataset.
+
+- Jumlah nilai uniknya sama dengan jumlah total entri (61.202), yang menandakan bahwa tidak ada duplikasi pengguna, dan setiap baris dalam dataset merepresentasikan satu pengguna yang unik.
 
 2. Cek Karakteristik Dataset
 
@@ -219,9 +253,7 @@ Konversi data dari tipe Series ke list dilakukan untuk mempermudah manipulasi da
    
 Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nilai tertentu ke dalam pasangan key-value, yang mempermudah proses pencarian, pengelompokan, atau pengkodean data. Dalam konteks proyek sistem rekomendasi, dictionary sering digunakan untuk menghubungkan ID numerik dengan nama jurusan atau universitas, sehingga model dapat bekerja dengan data numerik sementara hasil akhirnya tetap dapat ditampilkan dalam format yang mudah dipahami oleh pengguna. Selain itu, struktur dictionary memungkinkan akses data yang efisien dan cepat, sehingga sangat berguna dalam proses transformasi data dan interpretasi hasil model.
 
-## Data Preparation - Collaborative Filtering
-
-1. TF-IDF Vectorizer
+3. TF-IDF Vectorizer
    
   Metode evaluasi yang digunakan adalah TF-IDF (Term Frequency-Inverse Document Frequency), yang berfungsi untuk mengukur tingkat kepentingan sebuah kata dalam konteks keseluruhan dokumen. Secara matematis, TF-IDF terdiri dari dua komponen utama, yaitu TF (Term Frequency) yang menghitung frekuensi kemunculan kata dalam sebuah dokumen, dan IDF (Inverse Document Frequency) yang menilai seberapa umum kata tersebut muncul di seluruh kumpulan dokumen. Mengingat panjang teks dapat berbeda antar dokumen, perhitungan TF dan IDF disesuaikan agar menghasilkan evaluasi yang lebih akurat dibandingkan hanya menggunakan frekuensi kata secara sederhana.
 
@@ -243,15 +275,17 @@ Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nil
 
 - Dimensi Matriks yang Besar: Pada dataset besar dengan banyak kata unik, matriks TF-IDF bisa menjadi sangat besar dan sparse, sehingga memerlukan kapasitas memori dan komputasi yang lebih besar.
 
-2. Encode Dataset
+## Data Preparation - Collaborative Filtering
+
+1. Encode Dataset
 
   Variabel id_user dan id_major terlebih dahulu diolah untuk memperoleh nilai-nilai uniknya dengan menggunakan fungsi unique(), kemudian hasilnya dikonversi ke dalam bentuk list melalui fungsi tolist(). Proses ini bertujuan untuk menyederhanakan representasi data dengan mengeliminasi duplikasi pada masing-masing variabel. Setelah diperoleh list berisi nilai unik dari masing-masing variabel, langkah selanjutnya adalah melakukan proses encoding, yaitu mengubah setiap nilai unik tersebut menjadi representasi numerik berupa indeks integer. Proses ini dilakukan agar data kategorikal yang semula berbentuk string dapat diproses lebih lanjut oleh model pembelajaran mesin yang umumnya hanya menerima input dalam bentuk numerik. Dengan demikian, encoding ini menjadi tahap penting dalam proses pra-pemrosesan data.
 
-3. Mapping Features
+2. Mapping Features
 
   Selanjutnya, kedua variabel tersebut disimpan dalam variabel user dan prodi, kemudian dilakukan pemetaan terhadap dataframe terkait. Pada tahap berikutnya, dilakukan analisis statistik deskriptif untuk menentukan jumlah total pengguna (user), jumlah program studi (prodi), serta nilai minimum dan maksimum dari rata-rata nilai tes mahasiswa. Berdasarkan hasil analisis, diperoleh bahwa terdapat 1.286 pengguna dan 346 program studi, dengan nilai minimum rata-rata tes sebesar 346,33 dan nilai maksimum sebesar 691,66. Tahapan ini memiliki peranan penting dalam proses pemodelan data karena memberikan gambaran yang komprehensif mengenai karakteristik data, yang akan mendukung pemahaman lebih mendalam dalam analisis maupun pembangunan model selanjutnya.
 
-4. Split Data Menjadi Train dan Validasi
+3. Split Data Menjadi Train dan Validasi
 
   Pada tahap ini, beberapa prosedur pra-pemrosesan data akan diterapkan. Pertama, urutan data dalam dataframe df akan diacak menggunakan fungsi .sample() dengan parameter frac=1 untuk mengambil seluruh baris dan random_state=42 agar hasil pengacakan bersifat reproducible. Setelah proses pengacakan, kolom user dan prodi akan dipisahkan sebagai variabel fitur (x), sedangkan kolom rata_rata_nilai akan dinormalisasi menggunakan teknik Min-Max Scaling sehingga nilai-nilainya berada dalam rentang 0 hingga 1. Selanjutnya, data dibagi menjadi dua subset, yakni 80% sebagai data pelatihan dan 20% sebagai data validasi. Hasil akhir dari tahapan ini adalah data fitur (x) dan target (y) yang sudah siap digunakan dalam proses pelatihan model. Pembagian data ini dikenal sebagai teknik train-test split yang bertujuan untuk mengevaluasi kinerja model secara objektif.
 
@@ -378,20 +412,33 @@ Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nil
 
   Selanjutnya, model collaborative filtering yang telah dilatih sebelumnya digunakan untuk memprediksi skor untuk setiap pasangan pengguna-prodi yang belum dipilih. Sepuluh program studi dengan skor tertinggi dipilih sebagai rekomendasi, kemudian ID program studi tersebut dikonversi kembali menjadi nama program studi. Selain itu, daftar program studi yang telah dipilih oleh pengguna beserta nama universitasnya juga ditampilkan sebagai pembanding terhadap rekomendasi yang diberikan. Akhirnya, daftar 10 program studi rekomendasi bersama dengan nama universitasnya ditampilkan guna membantu pengguna dalam pengambilan keputusan. Proses ini bertujuan untuk memberikan gambaran yang komprehensif mengenai pilihan program studi yang relevan dengan preferensi pengguna, sekaligus menawarkan alternatif yang sesuai berdasarkan model collaborative filtering yang sudah dikembangkan.
   
-  Tabel 3. Input untuk user dengan id 1432064	 dan jurusan 'TV DAN FILM' :
-  ![image](https://github.com/user-attachments/assets/771a8f8f-395e-4566-911d-35e0d106ffa9)
-  
-  Tabel 4. Hasil rekomendasi untuk user dengan id 1432064 dan jurusan 'TV DAN FILM' :
-  ![image](https://github.com/user-attachments/assets/5df7a425-00ae-4cd3-9b2a-c35ee2937f0b)
-  
-  Dari gambar di atas, sistem menampilkan jurusan yang relevan dengan skor yang dimasukkan oleh pengguna. Sistem rekomendasi ini menghadirkan 10 jurusan yang belum pernah dipilih oleh pengguna, dengan skor yang bervariasi mulai dari di bawah hingga di atas skor input pengguna. Dengan demikian, pengguna dapat melihat berbagai pilihan program studi yang sesuai dengan kemampuan mereka berdasarkan rentang skor rekomendasi dari nilai terendah hingga tertinggi.
+  Tabel 3. Input untuk user dengan id 9132037 dan jurusan 'SENI KRIYA' :
+| id_major | id_user | rata_rata_nilai | type       | major_name | capacity | id_university | university_name    | user | prodi |
+|----------|---------|-----------------|------------|------------|----------|---------------|--------------------|------|-------|
+| 21865    | 9132037 | 565.888889      | humanities | SENI KRIYA | 11.0     | 913.0         | ISBI TANAH PAPUA   | 1038 | 1038  |
+
+  Tabel 4. Hasil rekomendasi untuk user dengan id 9132037 dan jurusan 'AKUNTANSI' :
+| id_major | id_user | rata_rata_nilai | type       | major_name                | capacity | id_university | university_name                | user | prodi |
+|----------|---------|-----------------|------------|---------------------------|----------|---------------|--------------------------------|------|-------|
+| 21645    | 3642165 | 593.444444      | humanities | SENI PEDALANGAN           | 7.0      | 364.0         | ISI YOGYAKARTA                 | 1036 | 1036  |
+| 646      | 3852011 | 551.666667      | humanities | EKONOMI PEMBANGUNAN       | 90.0     | 385.0         | UPN "VETERAN" JAWA TIMUR       | 367  | 367   |
+| 273      | 3552085 | 631.111111      | humanities | AKUNTANSI                 | 138.0    | 355.0         | UNIVERSITAS DIPONEGORO         | 199  | 199   |
+| 304      | 8112025 | 543.000000      | humanities | IL. ADM. NEGARA           | 100.0    | 811.0         | UNIVERSITAS PATTIMURA          | 212  | 212   |
+| 1934     | 3732261 | 567.222222      | humanities | DESAIN KOMUNIKASI VISUAL  | 60.0     | 373.0         | UNIVERSITAS NEGERI MALANG      | 595  | 595   |
+| 918      | 3512157 | 606.888889      | humanities | PENDIDIKAN BAHASA INGGRIS | 30.0     | 351.0         | UNIVERSITAS JENDERAL SOEDIRMAN | 446  | 446   |
+| 419      | 3552031 | 557.888889      | humanities | SEJARAH                   | 40.0     | 355.0         | UNIVERSITAS DIPONEGORO         | 268  | 268   |
+| 18482    | 8112017 | 453.333333      | humanities | IL. HUKUM                 | 275.0    | 811.0         | UNIVERSITAS PATTIMURA          | 996  | 996   |
+| 463      | 3852081 | 599.555556      | humanities | ILMU HUKUM                | 120.0    | 385.0         | UPN "VETERAN" JAWA TIMUR       | 287  | 287   |
+| 19693    | 1222334 | 472.555556      | humanities | ILMU EKONOMI              | 48.0     | 122.0         | UNIVERSITAS NEGERI MEDAN       | 1012 | 1012  |
+
+Berdasarkan tabel di atas, sistem menampilkan jurusan yang relevan dengan skor rata-rata nilai yang dimasukkan oleh pengguna. Sistem rekomendasi ini menyajikan 10 program studi yang belum pernah dipilih oleh pengguna, dengan variasi skor rata-rata nilai mulai dari yang lebih rendah hingga lebih tinggi dibandingkan skor input pengguna. Dengan demikian, pengguna dapat melihat berbagai pilihan jurusan yang sesuai dengan kemampuan mereka berdasarkan rentang skor rekomendasi dari nilai terendah hingga tertinggi
 
 # Evaluation
 1. Model Content Based Filtering
    
   Hasil dari penerapan metode Content Based Filtering menunjukkan bahwa sistem rekomendasi mampu memberikan output yang cukup akurat. Dari 5 rekomendasi yang dihasilkan, hampir semuanya sangat mirip dengan preferensi input pengguna. Metrik evaluasi yang digunakan adalah Recommender System Precision (RSP), yang berfungsi untuk mengukur tingkat relevansi rekomendasi yang diberikan oleh sistem terhadap preferensi asli pengguna. Selain itu, beberapa jurusan yang direkomendasikan memiliki kesamaan kata kunci, seperti ilmu komunikasi. Metrik ini sangat tepat digunakan mengingat tujuan sistem adalah memberikan rekomendasi yang sesuai dan relevan dengan keinginan pengguna. Rumus dari metrik Recommender System Precision (RSP) adalah sebagai berikut:
    
-  RSP = RR / RA
+$RSP = \frac{RR}{RA}$
    
   Keterangan:
   
@@ -402,41 +449,46 @@ Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nil
   
   Berikut tampilan input user dan hasil rekomendasi berdasarkan input tersebut:
   
-  - Tabel 1. Data Jurusan dengan Id 7112072 :
+  - Tabel 1. Data Jurusan dengan Id 3612135 :
   
-  ![image](https://github.com/user-attachments/assets/fddb4f91-17c3-4e59-8a30-bf6f79d3f7b2)
+| id\_major | university\_name        | major\_name    |
+| --------- | ----------------------- | -------------- |
+| 3612135   | UNIVERSITAS GADJAH MADA | SASTRA PRANCIS |
   
-  - Tabel 2. 5 Rekomendasi Jurusan, Berdasarkan Target Jurusan dengan Id 7112072
+  - Tabel 2. 5 Rekomendasi Jurusan, Berdasarkan Target Jurusan dengan Id 3612135
     
-  ![image](https://github.com/user-attachments/assets/b44c8e7e-3dd6-4d49-a642-11b0065e8ffe)
-  
-  
+| id\_major | university\_name              | major\_name               |
+| --------- | ----------------------------- | ------------------------- |
+| 3562281   | UNIVERSITAS NEGERI SEMARANG   | SASTRA PRANCIS            |
+| 3232135   | UNIVERSITAS NEGERI JAKARTA    | PENDIDIKAN BAHASA PRANCIS |
+| 3562242   | UNIVERSITAS NEGERI SEMARANG   | PENDIDIKAN BAHASA PRANCIS |
+| 3622296   | UNIVERSITAS NEGERI YOGYAKARTA | PENDIDIKAN BAHASA PRANCIS |
+| 3332144   | UNIVERSITAS PADJADJARAN       | SASTRA INGGRIS            |
+
   Hasil diatas menunjukan bahwa presisi dari sistem rekomendasi dengan teknik Content Based Filtering pada uji coba ini, yakni 5/5 = 100%.
 
 2. Model Collaborative Filtering
    
-  Untuk mengevaluasi performa model Collaborative Filtering dalam menghasilkan rekomendasi, digunakan metrik Root Mean Squared Error (RMSE). Pemilihan metrik ini didasarkan pada jenis data yang digunakan, yaitu berupa angka atau nilai rating. RMSE digunakan untuk mengukur seberapa akurat model dalam memprediksi rating pengguna dengan meminimalkan kesalahan prediksi.
-
-  Berdasarkan hasil pelatihan model, nilai RMSE pada data validasi mencapai angka stabil sebesar 0.1485 sejak epoch ke-3 hingga epoch ke-18. Nilai ini menunjukkan bahwa rata-rata kesalahan prediksi model terhadap data validasi tergolong kecil, sehingga performa model dapat dikatakan cukup baik dalam mempelajari pola preferensi pengguna.
-
-  Dalam konteks membangun sistem rekomendasi berbasis preferensi pengguna melalui data rating, RMSE merupakan metrik yang sesuai karena mampu menggambarkan seberapa jauh hasil prediksi dari nilai aktual. Selain itu, RMSE memberikan interpretasi yang jelas karena berada pada skala yang sama dengan data rating yang digunakan.
+Metrik Root Mean Squared Error (RMSE) digunakan untuk mengevaluasi performa model Collaborative Filtering dalam menghasilkan rekomendasi. Pemilihan metrik ini didasarkan pada karakteristik data yang berupa nilai numerik, yaitu rating, sehingga diperlukan ukuran yang dapat menunjukkan seberapa akurat model dalam memprediksi rating dengan kesalahan sekecil mungkin. Dalam konteks pengembangan sistem rekomendasi yang efektif dan efisien berbasis rating pengguna, RMSE dinilai tepat karena fokus utamanya adalah meminimalkan tingkat kesalahan prediksi. Selain itu, RMSE memberikan interpretasi yang jelas dan intuitif karena nilainya berada dalam skala yang sama dengan rating yang digunakan, serta merepresentasikan rata-rata kesalahan prediksi yang telah diakarkan.
 
   Adapun rumus dari Root Mean Squared Error (RMSE) adalah sebagai berikut:
   
-  ![image](https://github.com/user-attachments/assets/3dae2d24-ce7c-4e1c-8ce7-669684aeed0e)
+$$
+RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+$$
   
   keterangan :
   
-  Yt = Y true (Aktual/target)
-  
-  Yp = Y predict (Prediksi)
-  
-  n = jumlah data
+$n$: jumlah data
+
+$y_i$: nilai aktual (rating asli dari pengguna)
+
+$\hat{y}_i$: nilai prediksi dari model
 
   Metrik ini bekerja dengan menghitung akar dari rata-rata kuadrat selisih antara nilai prediksi dan nilai aktual, sehingga semakin kecil nilai RMSE, semakin baik performa model.
   
   Root Mean Squared Error (RMSE) merupakan metrik evaluasi yang menghitung akar kuadrat dari rata-rata selisih kuadrat antara nilai yang diprediksi dan nilai aktual. Nilai RMSE yang lebih rendah mengindikasikan bahwa model memiliki tingkat kesalahan prediksi yang kecil, sehingga kualitas prediksinya lebih baik. Oleh karena itu, RMSE sering digunakan untuk menilai performa model regresi maupun sistem rekomendasi. Visualisasi berikut menunjukkan hasil perhitungan RMSE pada model sistem rekomendasi jurusan menggunakan pendekatan collaborative filtering.
   
-  ![image](https://github.com/user-attachments/assets/eedd9163-3d55-4469-b0f5-674f3782b027)
-  
-  Berdasarkan grafik nilai Root Mean Squared Error (RMSE) terhadap jumlah epoch, dapat dilihat bahwa nilai RMSE pada data pelatihan mengalami penurunan seiring bertambahnya jumlah epoch. Hal ini menunjukkan bahwa model mampu mempelajari pola dari data pelatihan dengan cukup baik. Namun, nilai RMSE pada data pengujian terlihat relatif konstan dan tidak mengalami penurunan yang signifikan. Perbedaan yang cukup mencolok antara kurva RMSE pelatihan dan pengujian mengindikasikan kemungkinan terjadinya overfitting, di mana model terlalu menyesuaikan diri terhadap data pelatihan sehingga tidak dapat melakukan generalisasi dengan baik pada data yang belum pernah dilihat sebelumnya. Oleh karena itu, perlu dilakukan evaluasi lanjutan terhadap model, seperti penerapan teknik regularisasi, penambahan data latih, atau penggunaan metode cross-validation untuk meningkatkan kemampuan generalisasi model.
+![image](https://github.com/user-attachments/assets/756604e6-aa4d-4514-9fb1-b05aa8463455)
+
+Berdasarkan grafik nilai Root Mean Squared Error (RMSE) terhadap jumlah epoch, terlihat bahwa RMSE pada data pelatihan mengalami fluktuasi di awal, namun cenderung menurun setelah beberapa epoch, yang menunjukkan bahwa model mulai belajar dari data pelatihan secara bertahap. Sementara itu, nilai RMSE pada data pengujian relatif stabil dan tidak mengalami penurunan yang signifikan sepanjang proses pelatihan. Perbedaan antara kurva pelatihan dan pengujian tidak terlalu mencolok, sehingga belum menunjukkan indikasi overfitting yang kuat. Namun, karena performa pada data pengujian tidak membaik seiring bertambahnya epoch, hal ini bisa mengindikasikan bahwa model belum cukup optimal dalam menangkap pola dari data secara umum. Oleh karena itu, perbaikan dapat dilakukan dengan menyesuaikan arsitektur model, melakukan tuning hyperparameter, atau menambahkan data pelatihan untuk meningkatkan kemampuan generalisasi model.
