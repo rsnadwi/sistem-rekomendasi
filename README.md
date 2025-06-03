@@ -68,16 +68,26 @@
 
 **Majors Dataset**
   
-  Dataset ini memuat informasi mengenai program studi atau jurusan yang tersedia di berbagai universitas. Informasi yang disediakan mencakup nama jurusan, kode jurusan, dan bidang studi yang relevan. Dataset ini dapat digunakan untuk memahami struktur dan variasi jurusan di masing-masing universitas.
+Dataset Majors memuat informasi terkait program studi atau jurusan yang tersedia di berbagai universitas. Dataset ini penting untuk memahami struktur program studi serta untuk analisis lebih lanjut yang mengaitkan jurusan dengan universitas dan kapasitas penerimaan mahasiswa.
 
-  - Jumlah kolom: Terdapat beberapa kolom penting dalam dataset ini, antara lain:
-  - Unnamed: 0 : Kolom tanpa nama yang kemungkinan merupakan hasil indeks otomatis dari sistem atau ekspor dari file spreadsheet. Kolom ini dapat diabaikan apabila tidak mengandung informasi signifikan.
-  - id_major : ID unik yang merepresentasikan setiap jurusan.
-  - id_university : ID universitas tempat jurusan tersebut berada. Kolom ini dapat digunakan untuk melakukan relasi dengan dataset universitas.
-  - type : Jenis atau kategori jurusan, seperti program reguler, internasional, vokasi, dan lainnya (bergantung pada isi data).
-  - major_name : Nama jurusan, misalnya Teknik Informatika, Kedokteran, Hukum, dan sebagainya.
-  - capacity : Kapasitas daya tampung jurusan, yang menunjukkan jumlah maksimum mahasiswa yang dapat diterima.
-  
+*Jumlah Baris dan Kolom:*
+
+Dataset ini memiliki 3167 baris dan 6 kolom (tidak termasuk kolom Unnamed: 0 yang merupakan hasil ekspor dan dapat diabaikan).
+
+*Deskripsi Kolom:*
+
+- Unnamed: 0 : Kolom indeks otomatis dari hasil ekspor data, tidak mengandung informasi penting dan dapat diabaikan.
+
+- id_major : ID unik untuk setiap jurusan.
+
+- id_university : ID dari universitas tempat jurusan tersebut berada. Dapat digunakan untuk relasi dengan dataset Universities.
+
+- type : Jenis atau kategori jurusan, misalnya science, humanities, dan lainnya.
+
+- major_name : Nama jurusan, contohnya Teknik Sipil, Kedokteran, Manajemen, dll.
+
+- capacity : Kapasitas daya tampung jurusan, menunjukkan jumlah maksimum mahasiswa yang dapat diterima.
+
   Untuk memahami kondisi awal data sebelum dilakukan proses pembersihan, dilakukan pengecekan missing value menggunakan fungsi .isnull().sum(). Berikut hasilnya:
   
   | Kolom          | Jumlah Missing Value |
@@ -233,7 +243,14 @@ Tahap ini dilakukan dengan menggabungkan tiga dataset, yaitu score_humanities, m
 
 5. Data Filtering
 
-Pada tahap ini dilakukan penyaringan nilai pada kolom type untuk menghilangkan entri yang tidak sesuai dengan fokus bisnis, yaitu data jurusan saintek. Nilai dengan kategori science yang tidak relevan akan difilter dan beberapa variabel yang sebelumnya telah ditentukan kurang relevan juga akan dihapus. Setelah dilakukan pengecekan ulang, kondisi data menunjukkan bahwa semua nilai yang tidak sesuai sudah dibersihkan dan dataset siap untuk proses analisis selanjutnya.
+Pada tahap ini, dilakukan proses penyaringan data untuk memastikan hanya entri yang relevan dengan fokus analisis yang dipertahankan. Karena analisis difokuskan pada jurusan-jurusan dalam bidang sosial dan humaniora (humanities), maka entri dengan kategori science dianggap tidak relevan dan perlu dihapus dari dataset.
+
+Proses filtering dilakukan dengan menghapus semua baris yang memiliki nilai 'science' pada kolom type. Langkah ini dilakukan menggunakan kode berikut:
+merged_data_clean = merged_data[merged_data['type'] != 'science']
+
+Dengan perintah ini, semua entri jurusan yang bertipe 'science' dihilangkan dari data gabungan (merged_data). Dataset hasil filtering disimpan dalam merged_data_clean dan menjadi dasar untuk analisis berikutnya.
+
+Setelah proses ini, dilakukan verifikasi terhadap kolom type untuk memastikan bahwa nilai 'science' telah sepenuhnya dihapus. Hasil verifikasi menunjukkan bahwa dataset sudah hanya memuat jurusan dengan kategori selain 'science', sehingga sesuai dengan kebutuhan analisis pada bidang sosial dan humaniora.
 
 6. Penanganan Missing Value
 
@@ -247,47 +264,145 @@ Setelah dilakukan pengurutan data, tahap berikutnya adalah memeriksa adanya dupl
 
 1. Konversi Data Series Menjadi List
 
-Konversi data dari tipe Series ke list dilakukan untuk mempermudah manipulasi dan penggunaan data pada tahap-tahap selanjutnya dalam proses analisis atau pengembangan model. Dalam format list, data menjadi lebih fleksibel untuk diterapkan dalam berbagai operasi pemrograman, seperti iterasi menggunakan loop, pemetaan ke dalam struktur data lain, serta pemrosesan dengan fungsi-fungsi yang secara khusus membutuhkan input bertipe list. Selain itu, konversi ini juga mempermudah integrasi data ke dalam model machine learning atau sistem rekomendasi, di mana list sering digunakan sebagai format standar input.
+Dalam tahap ini, dilakukan proses konversi data dari tipe pandas.Series ke dalam format list. Tujuan dari langkah ini adalah untuk mempermudah manipulasi dan penggunaan data pada tahap-tahap analisis lanjutan, khususnya dalam implementasi sistem rekomendasi atau model machine learning yang umumnya menerima input dalam format list.
+
+Kolom yang dikonversi antara lain:
+
+- id_major → merepresentasikan ID jurusan,
+
+- university_name → nama universitas tempat jurusan berada,
+
+- major_name → nama jurusan atau program studi.
+
+Proses konversi dilakukan menggunakan fungsi .tolist() dari pustaka pandas, yang menghasilkan tiga buah list:
+
+id_major = p['id_major'].tolist()
+nama_Univ = p['university_name'].tolist()
+nama_Prodi = p['major_name'].tolist()
+
+Setelah konversi, dilakukan verifikasi terhadap panjang masing-masing list untuk memastikan tidak terjadi kehilangan atau ketidaksesuaian data. Hasil verifikasi menunjukkan bahwa ketiganya memiliki panjang yang sama, yaitu sebanyak 1.286 entri, sehingga dapat disimpulkan bahwa proses konversi berhasil dilakukan dengan benar dan data dalam list sudah siap digunakan untuk proses selanjutnya.
+
+Langkah ini penting karena list merupakan struktur data yang lebih fleksibel untuk digunakan dalam iterasi, pemetaan, serta integrasi ke dalam berbagai algoritma analisis dan pemodelan.
 
 2. Membuat Dictionary
    
-Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nilai tertentu ke dalam pasangan key-value, yang mempermudah proses pencarian, pengelompokan, atau pengkodean data. Dalam konteks proyek sistem rekomendasi, dictionary sering digunakan untuk menghubungkan ID numerik dengan nama jurusan atau universitas, sehingga model dapat bekerja dengan data numerik sementara hasil akhirnya tetap dapat ditampilkan dalam format yang mudah dipahami oleh pengguna. Selain itu, struktur dictionary memungkinkan akses data yang efisien dan cepat, sehingga sangat berguna dalam proses transformasi data dan interpretasi hasil model.
+Pada tahap ini, dilakukan pembuatan struktur data dictionary dalam bentuk DataFrame untuk memetakan hubungan antara ID jurusan (id_major), nama universitas (university_name), dan nama jurusan (major_name). Tujuan pembuatan dictionary ini adalah untuk memudahkan proses pencarian dan pengelolaan data dengan menggunakan pasangan key-value, sehingga data numerik yang digunakan oleh model atau sistem rekomendasi dapat dihubungkan kembali dengan informasi yang mudah dipahami oleh pengguna.
+
+Penggunaan dictionary sangat penting dalam konteks sistem rekomendasi, di mana model biasanya bekerja dengan data berbasis ID atau angka agar proses komputasi menjadi lebih efisien. Namun, hasil akhir yang disajikan kepada pengguna harus tetap menggunakan nama jurusan dan universitas agar informatif dan mudah dimengerti.
+
+Implementasi pembuatan dictionary dilakukan dengan menggabungkan list yang sudah dikonversi sebelumnya (id_major, nama_Univ, dan nama_Prodi) ke dalam sebuah DataFrame id_new, seperti pada kode berikut:
+
+id_new = pd.DataFrame({
+    'id_major': id_major,
+    'university_name': nama_Univ,
+    'major_name': nama_Prodi
+})
+
+DataFrame hasil penggabungan ini berisi 1.286 baris data, di mana setiap baris merepresentasikan satu jurusan beserta universitas terkait. Contoh isi beberapa baris data dapat dilihat pada sampel berikut:
+
+| id\_major | university\_name           | major\_name                         |
+| --------- | -------------------------- | ----------------------------------- |
+| 3322014   | INSTITUT TEKNOLOGI BANDUNG | FAKULTAS SENIRUPA DAN DESAIN (FSRD) |
+| 3212057   | UNIVERSITAS INDONESIA      | ILMU KOMUNIKASI                     |
+| 3722057   | UNIVERSITAS BRAWIJAYA      | MANAJEMEN                           |
+| 3212081   | UNIVERSITAS INDONESIA      | KRIMINOLOGI                         |
+| 3812106   | UNIVERSITAS AIRLANGGA      | AKUNTANSI                           |
+
+Selanjutnya, data ini dicek kembali dengan menampilkan beberapa sampel secara acak untuk memastikan integritas data tetap terjaga setelah proses penggabungan:
+
+data = id_new
+data.sample(5)
+
+Pembuatan dictionary ini menjadi dasar penting dalam proses transformasi dan interpretasi data, terutama ketika data numerik hasil pemodelan perlu dikaitkan kembali dengan nama jurusan dan universitas dalam sistem rekomendasi agar hasil analisis dapat disajikan secara informatif dan user-friendly.
 
 3. TF-IDF Vectorizer
    
-  Metode evaluasi yang digunakan adalah TF-IDF (Term Frequency-Inverse Document Frequency), yang berfungsi untuk mengukur tingkat kepentingan sebuah kata dalam konteks keseluruhan dokumen. Secara matematis, TF-IDF terdiri dari dua komponen utama, yaitu TF (Term Frequency) yang menghitung frekuensi kemunculan kata dalam sebuah dokumen, dan IDF (Inverse Document Frequency) yang menilai seberapa umum kata tersebut muncul di seluruh kumpulan dokumen. Mengingat panjang teks dapat berbeda antar dokumen, perhitungan TF dan IDF disesuaikan agar menghasilkan evaluasi yang lebih akurat dibandingkan hanya menggunakan frekuensi kata secara sederhana.
+Pada tahap ini, digunakan metode TF-IDF (Term Frequency-Inverse Document Frequency) untuk mengukur tingkat kepentingan setiap kata dalam nama jurusan (major_name) terhadap keseluruhan data jurusan yang ada. TF-IDF adalah teknik yang mengombinasikan dua konsep utama:
 
-  Proses perhitungan ini dilakukan dengan memanfaatkan fungsi TfidfVectorizer(). Variabel major_name digunakan dalam perhitungan nilai IDF, sekaligus melakukan pemetaan dari indeks fitur numerik ke nama fitur, serta mengubah data ke dalam bentuk matriks. Hasil output berupa matriks dengan ukuran 1286 baris (jumlah data) dan 230 kolom (jumlah jenis nama jurusan). Matriks ini kemudian dikonversi menggunakan fungsi todense() sebagai persiapan untuk tahap selanjutnya, yaitu menghitung tingkat kemiripan antar data menggunakan metode Cosine Similarity.
+- Term Frequency (TF): Menghitung frekuensi kemunculan kata dalam satu dokumen (dalam hal ini, nama jurusan).
 
-**Kelebihan TF-IDF:**
+- Inverse Document Frequency (IDF): Menilai seberapa umum kata tersebut muncul di seluruh kumpulan dokumen, sehingga kata-kata yang sangat sering muncul di banyak dokumen akan memiliki bobot lebih rendah.
 
-- Mampu Menangkap Kepentingan Kata: TF-IDF tidak hanya menghitung frekuensi kata, tetapi juga mengurangi bobot kata-kata yang umum muncul di banyak dokumen sehingga fokus pada kata-kata yang lebih relevan.
+Penggunaan TF-IDF membantu dalam menyeimbangkan bobot kata sehingga kata-kata yang sering muncul di hampir semua jurusan tidak terlalu dominan, dan kata-kata unik atau penting lebih diberi bobot yang lebih besar. Hal ini membuat analisis menjadi lebih akurat dibandingkan hanya mengandalkan frekuensi kata biasa.
 
-- Sederhana dan Efektif: Algoritma ini mudah diimplementasikan dan cukup efisien untuk berbagai aplikasi pengolahan teks, termasuk sistem rekomendasi.
+Proses ini dilakukan dengan memanfaatkan fungsi TfidfVectorizer() dari pustaka scikit-learn. Variabel major_name digunakan sebagai input, di mana setiap nama jurusan diolah untuk menghasilkan matriks fitur TF-IDF. Fungsi ini secara otomatis melakukan pemetaan dari indeks fitur numerik ke nama kata dan mengubah data menjadi bentuk matriks sparse.
 
-- Tidak Memerlukan Label: TF-IDF dapat diterapkan pada data teks tanpa memerlukan label atau anotasi khusus, sehingga cocok untuk data yang tidak berstruktur.
+Contoh kata-kata yang dihasilkan sebagai fitur dari proses ini antara lain:
 
-**Kekurangan TF-IDF:**
+['adm', 'admin', 'administrasi', 'agama', 'akuntansi', 'bahasa', 'ekonomi', 'filsafat', 'hukum', 'komunikasi', 'kriminologi', 'manajemen', 'musik', 'pendidikan', 'politik', 'psikologi', 'sastra', 'sejarah', 'seni', 'teknik', 'teknologi', ...]
 
-- Tidak Memperhitungkan Konteks: TF-IDF hanya memperhatikan kata secara terpisah tanpa mempertimbangkan urutan kata atau konteks kalimat, sehingga makna sebenarnya kadang terabaikan.
+Matriks TF-IDF yang dihasilkan memiliki ukuran 1286 x 230, di mana:
 
-- Rentan terhadap Sinonim dan Ambiguitas: Karena hanya mengandalkan frekuensi kata, TF-IDF tidak mampu membedakan kata dengan arti berbeda tapi bentuk sama, maupun kata berbeda dengan arti yang sama (sinonim).
+- 1286 adalah jumlah jurusan (baris),
 
-- Dimensi Matriks yang Besar: Pada dataset besar dengan banyak kata unik, matriks TF-IDF bisa menjadi sangat besar dan sparse, sehingga memerlukan kapasitas memori dan komputasi yang lebih besar.
+- 230 adalah jumlah kata unik (kolom) yang menjadi fitur.
+
+Matriks ini kemudian dikonversi ke dalam bentuk dense matrix dengan fungsi .todense() sebagai persiapan untuk proses perhitungan kemiripan antar jurusan menggunakan metode Cosine Similarity pada tahap berikutnya.
+
+Berikut contoh representasi matriks TF-IDF dalam bentuk DataFrame dengan kolom mewakili kata-kata fitur dan baris mewakili jurusan berdasarkan id_major:
+
+| id\_major | adm | administrasi | agama | akuntansi | ... | seni | teknik | teknologi |
+| --------- | --- | ------------ | ----- | --------- | --- | ---- | ------ | --------- |
+| 3652225   | 0.0 | 0.0          | 0.0   | 0.0       | ... | 0.0  | 0.0    | 0.0       |
+| 3552093   | 0.0 | 0.0          | 0.0   | 0.0       | ... | 0.0  | 0.0    | 0.0       |
+| 3232023   | 0.0 | 0.0          | 0.0   | 0.0       | ... | 0.0  | 0.0    | 0.0       |
+| ...       | ... | ...          | ...   | ...       | ... | ...  | ...    | ...       |
+
+Kelebihan TF-IDF:
+- Menangkap Kepentingan Kata: Mampu menurunkan bobot kata-kata umum sehingga fokus pada kata-kata yang lebih relevan.
+
+- Sederhana dan Efektif: Mudah diimplementasikan dan efisien untuk pengolahan teks dan sistem rekomendasi.
+
+- Tidak Memerlukan Label: Dapat diterapkan pada data teks tanpa perlu anotasi khusus.
+
+Kekurangan TF-IDF:
+- Tidak Memperhitungkan Konteks: Mengabaikan urutan kata dan konteks kalimat sehingga makna bisa kurang tepat.
+
+- Rentan pada Sinonim dan Ambiguitas: Tidak membedakan kata dengan makna berbeda tetapi bentuk sama, maupun sinonim.
+
+- Dimensi Matriks Besar: Pada data besar, matriks bisa sangat besar dan sparse sehingga memerlukan kapasitas memori dan komputasi yang tinggi.
 
 ## Data Preparation - Collaborative Filtering
 
 1. Encode Dataset
 
-  Variabel id_user dan id_major terlebih dahulu diolah untuk memperoleh nilai-nilai uniknya dengan menggunakan fungsi unique(), kemudian hasilnya dikonversi ke dalam bentuk list melalui fungsi tolist(). Proses ini bertujuan untuk menyederhanakan representasi data dengan mengeliminasi duplikasi pada masing-masing variabel. Setelah diperoleh list berisi nilai unik dari masing-masing variabel, langkah selanjutnya adalah melakukan proses encoding, yaitu mengubah setiap nilai unik tersebut menjadi representasi numerik berupa indeks integer. Proses ini dilakukan agar data kategorikal yang semula berbentuk string dapat diproses lebih lanjut oleh model pembelajaran mesin yang umumnya hanya menerima input dalam bentuk numerik. Dengan demikian, encoding ini menjadi tahap penting dalam proses pra-pemrosesan data.
+Pada tahap awal persiapan data untuk metode Collaborative Filtering, diperlukan proses encoding pada variabel kategorikal agar dapat diproses oleh model pembelajaran mesin yang umumnya hanya menerima input dalam bentuk numerik.
+
+Variabel yang di-encode pada tahap ini adalah:
+
+- id_user — ID unik dari pengguna (user)
+
+- id_major — ID unik dari jurusan (major)
+
+Proses yang dilakukan:
+  1. Mendapatkan nilai unik dari id_user dan id_major menggunakan fungsi .unique().
+  Ini bertujuan untuk mengeliminasi duplikasi sehingga setiap nilai hanya muncul sekali.
+  
+  2. Mengubah array unik tersebut menjadi list dengan fungsi .tolist().
+  List ini memudahkan proses encoding selanjutnya.
+  
+  3. Melakukan encoding dengan memetakan setiap nilai unik ke indeks integer menggunakan fungsi dictionary comprehension.
+  Contoh: User dengan id_user tertentu di-mapping ke angka 0, user berikutnya ke 1, dan seterusnya. Hal yang sama dilakukan untuk id_major.
+  
+  4. Membuat mapping balik dari indeks integer ke nilai asli untuk memudahkan interpretasi hasil setelah pemodelan.
+
+Proses encoding ini sangat penting agar data yang awalnya berupa string atau ID kategorikal dapat diproses oleh algoritma collaborative filtering yang menggunakan representasi numerik.
 
 2. Mapping Features
 
-  Selanjutnya, kedua variabel tersebut disimpan dalam variabel user dan prodi, kemudian dilakukan pemetaan terhadap dataframe terkait. Pada tahap berikutnya, dilakukan analisis statistik deskriptif untuk menentukan jumlah total pengguna (user), jumlah program studi (prodi), serta nilai minimum dan maksimum dari rata-rata nilai tes mahasiswa. Berdasarkan hasil analisis, diperoleh bahwa terdapat 1.286 pengguna dan 346 program studi, dengan nilai minimum rata-rata tes sebesar 346,33 dan nilai maksimum sebesar 691,66. Tahapan ini memiliki peranan penting dalam proses pemodelan data karena memberikan gambaran yang komprehensif mengenai karakteristik data, yang akan mendukung pemahaman lebih mendalam dalam analisis maupun pembangunan model selanjutnya.
+Setelah melakukan encoding pada variabel id_user dan id_major menjadi indeks numerik unik, langkah selanjutnya adalah melakukan pemetaan hasil encoding tersebut ke dalam dataframe utama. Pada tahap ini, nilai-nilai id_user dan id_major diubah menjadi representasi numerik yang kemudian disimpan ke dalam kolom baru bernama user dan prodi. Proses pemetaan ini sangat penting karena algoritma machine learning, termasuk metode Collaborative Filtering, memerlukan input dalam bentuk angka agar dapat memproses data dengan lebih efisien. Dengan melakukan mapping ini, setiap pengguna dan program studi memiliki identitas numerik yang unik dan konsisten untuk keperluan analisis dan pemodelan.
+
+Setelah proses mapping, dilakukan analisis statistik deskriptif untuk memahami karakteristik data secara keseluruhan. Dari hasil analisis, diketahui bahwa terdapat 1.286 pengguna unik dan 346 program studi berbeda dalam dataset ini. Selain itu, nilai rata-rata tes mahasiswa yang terekam memiliki rentang yang cukup luas, dengan nilai minimum sebesar 346,33 dan nilai maksimum mencapai 691,67. Informasi ini memberikan gambaran awal tentang jumlah entitas yang terlibat serta variasi nilai yang akan diproses dalam tahap pemodelan berikutnya. Dengan demikian, tahap mapping dan analisis statistik ini menjadi fondasi penting dalam memastikan data siap untuk diolah lebih lanjut menggunakan metode Collaborative Filtering.
 
 3. Split Data Menjadi Train dan Validasi
 
-  Pada tahap ini, beberapa prosedur pra-pemrosesan data akan diterapkan. Pertama, urutan data dalam dataframe df akan diacak menggunakan fungsi .sample() dengan parameter frac=1 untuk mengambil seluruh baris dan random_state=42 agar hasil pengacakan bersifat reproducible. Setelah proses pengacakan, kolom user dan prodi akan dipisahkan sebagai variabel fitur (x), sedangkan kolom rata_rata_nilai akan dinormalisasi menggunakan teknik Min-Max Scaling sehingga nilai-nilainya berada dalam rentang 0 hingga 1. Selanjutnya, data dibagi menjadi dua subset, yakni 80% sebagai data pelatihan dan 20% sebagai data validasi. Hasil akhir dari tahapan ini adalah data fitur (x) dan target (y) yang sudah siap digunakan dalam proses pelatihan model. Pembagian data ini dikenal sebagai teknik train-test split yang bertujuan untuk mengevaluasi kinerja model secara objektif.
+Pada tahap ini, dilakukan proses pra-pemrosesan data dengan tujuan menyiapkan dataset agar siap digunakan dalam pelatihan model. Pertama-tama, seluruh data dalam dataframe df diacak menggunakan fungsi .sample() dengan parameter frac=1, yang berarti seluruh baris data diacak, dan random_state=42 agar pengacakan bersifat konsisten dan dapat direproduksi di lain waktu. Pengacakan ini penting untuk memastikan bahwa distribusi data pada tahap pelatihan dan validasi tidak bias dan mewakili kondisi data secara keseluruhan.
+
+Setelah data diacak, kolom user dan prodi yang sudah berisi nilai numerik hasil encoding dipisahkan sebagai fitur input (x). Sementara itu, kolom target rata_rata_nilai dinormalisasi menggunakan teknik Min-Max Scaling agar nilainya berada dalam rentang 0 hingga 1. Normalisasi ini bertujuan agar perbedaan skala antar fitur tidak mempengaruhi proses pembelajaran model dan mempercepat konvergensi saat pelatihan.
+
+Selanjutnya, dataset dibagi menjadi dua bagian, yaitu 80% data untuk pelatihan (train) dan 20% sisanya untuk validasi (validation). Pembagian ini dilakukan secara langsung dengan mengambil potongan data setelah pengacakan, sehingga model dapat dilatih dengan sebagian besar data dan diuji kinerjanya pada data yang belum pernah dilihat sebelumnya. Pendekatan ini dikenal dengan istilah train-test split, yang merupakan teknik umum dalam machine learning untuk memastikan evaluasi model yang lebih objektif dan menghindari overfitting.
+
+Dengan demikian, pada akhir proses ini diperoleh variabel x_train dan y_train sebagai data fitur dan target untuk pelatihan, serta x_val dan y_val sebagai data untuk validasi model. Data yang sudah terpisah dan ternormalisasi ini siap digunakan dalam tahap pelatihan model Collaborative Filtering selanjutnya.
 
 # Modeling | Content Based Filtering
 
@@ -315,7 +430,11 @@ Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nil
 
 ## Cosine Similarity
 
-  Tahap kesamaan kosinus dilakukan untuk mengukur tingkat kemiripan antara dua vektor dengan membandingkan arah keduanya. Proses ini penting dalam model content-based filtering karena memberikan metode yang efektif untuk menentukan kesamaan antara item berdasarkan representasi vektor mereka, dengan cara menghitung sudut kosinus antara vektor tersebut. Semakin kecil sudutnya, semakin tinggi nilai kemiripan yang diperoleh. Metode ini sering dipakai dalam analisis teks untuk mengukur kesamaan antar dokumen. Pada langkah sebelumnya, dibuat sebuah dataframe bernama tfidf_matrix yang digunakan sebagai dasar untuk menghitung kesamaan kosinus antar id_major dengan memanfaatkan fungsi cosine_similarity(). Hasil dari proses ini adalah sebuah dataframe baru, df, yang berisi nilai kesamaan kosinus antara setiap pasangan id_major.
+Tahap perhitungan Cosine Similarity bertujuan untuk mengukur tingkat kemiripan antara dua item dalam ruang vektor, yang dalam konteks ini diaplikasikan pada program studi (prodi) berdasarkan representasi vektor hasil transformasi TF-IDF. Cosine similarity bekerja dengan menghitung sudut kosinus antara dua vektor; semakin kecil sudutnya, semakin besar nilai kemiripan yang dihasilkan, dengan nilai berkisar antara 0 hingga 1. Teknik ini sangat berguna dalam pendekatan content-based filtering, karena memungkinkan sistem untuk menemukan item yang mirip satu sama lain berdasarkan konten atau atributnya.
+
+Dalam implementasinya, proses ini diawali dengan menghitung matriks kemiripan dari tfidf_matrix menggunakan fungsi cosine_similarity() dari pustaka sklearn. Hasilnya adalah sebuah array dua dimensi (cosine_sim) yang menunjukkan nilai kemiripan antara setiap pasangan program studi. Nilai diagonal dari matriks ini adalah 1 karena setiap item memiliki kemiripan maksimum dengan dirinya sendiri. Nilai-nilai lainnya merepresentasikan tingkat kemiripan antar program studi yang berbeda, dengan sebagian besar nilai mendekati nol karena sifat data TF-IDF yang cenderung spars (jarang).
+
+Selanjutnya, hasil dari perhitungan cosine similarity disimpan dalam bentuk DataFrame baru (cosine_sim_df), dengan indeks dan kolom berupa nilai id_major, sehingga memudahkan pencarian kemiripan antar prodi secara langsung berdasarkan ID-nya. Struktur dari cosine_sim_df berbentuk matriks simetris berukuran 1286x1286, yang berarti seluruh kombinasi kemiripan antar 1.286 program studi telah dihitung.
 
   **Kelebihan Cosine Similarity:**
   
@@ -433,10 +552,15 @@ Pembuatan dictionary dilakukan sebagai tahap persiapan untuk memetakan nilai-nil
 
 Berdasarkan tabel di atas, sistem menampilkan jurusan yang relevan dengan skor rata-rata nilai yang dimasukkan oleh pengguna. Sistem rekomendasi ini menyajikan 10 program studi yang belum pernah dipilih oleh pengguna, dengan variasi skor rata-rata nilai mulai dari yang lebih rendah hingga lebih tinggi dibandingkan skor input pengguna. Dengan demikian, pengguna dapat melihat berbagai pilihan jurusan yang sesuai dengan kemampuan mereka berdasarkan rentang skor rekomendasi dari nilai terendah hingga tertinggi
 
+## Visualisasi Metrik
+![image](https://github.com/user-attachments/assets/c81b738f-a50a-468b-8d9e-143594ca3450)
+
+Grafik di atas memperlihatkan nilai Root Mean Squared Error (RMSE) pada data training dan testing selama 20 epoch pelatihan model. RMSE adalah metrik evaluasi yang umum digunakan untuk model regresi, yang mengukur seberapa besar rata-rata kesalahan antara prediksi dan nilai aktual.
+
 # Evaluation
 1. Model Content Based Filtering
    
-  Hasil dari penerapan metode Content Based Filtering menunjukkan bahwa sistem rekomendasi mampu memberikan output yang cukup akurat. Dari 5 rekomendasi yang dihasilkan, hampir semuanya sangat mirip dengan preferensi input pengguna. Metrik evaluasi yang digunakan adalah Recommender System Precision (RSP), yang berfungsi untuk mengukur tingkat relevansi rekomendasi yang diberikan oleh sistem terhadap preferensi asli pengguna. Selain itu, beberapa jurusan yang direkomendasikan memiliki kesamaan kata kunci, seperti ilmu komunikasi. Metrik ini sangat tepat digunakan mengingat tujuan sistem adalah memberikan rekomendasi yang sesuai dan relevan dengan keinginan pengguna. Rumus dari metrik Recommender System Precision (RSP) adalah sebagai berikut:
+Hasil dari penerapan metode Content-Based Filtering menunjukkan bahwa sistem rekomendasi mampu memberikan output yang cukup akurat. Dari 5 rekomendasi yang dihasilkan, sebagian besar memiliki kesamaan tema atau kata kunci dengan jurusan target yang diberikan oleh pengguna. Untuk mengukur kinerja sistem, digunakan metrik evaluasi Precision@5, yaitu proporsi rekomendasi relevan yang muncul dalam lima rekomendasi teratas. Metrik ini sesuai digunakan karena fokus sistem adalah memberikan saran jurusan yang paling relevan bagi pengguna. Rumus dari metrik Recommender System Precision (RSP) adalah sebagai berikut:
    
 $RSP = \frac{RR}{RA}$
    
@@ -445,7 +569,7 @@ $RSP = \frac{RR}{RA}$
   - RR = Jumlah rekomendasi yang relevan atau sesuai dengan preferensi pengguna
   - RA = Total jumlah rekomendasi yang dihasilkan oleh model
   
-  Metrik ini bekerja dengan cara menghitung proporsi rekomendasi yang relevan dibandingkan dengan keseluruhan rekomendasi yang diberikan oleh sistem.
+Untuk pengujian pada jurusan dengan id_major = 3612135 (SASTRA PRANCIS), sistem menghasilkan 5 rekomendasi, dengan 4 di antaranya relevan, seperti jurusan Sastra Prancis dan Pendidikan Bahasa Prancis. Hasil evaluasi programatik menunjukkan bahwa Precision@5 = 0.8, artinya 80% dari rekomendasi yang diberikan sistem sesuai dengan preferensi pengguna. Ini menunjukkan bahwa sistem sudah cukup baik dalam memahami dan menyarankan jurusan yang berkaitan, meskipun masih ada ruang untuk perbaikan.
   
   Berikut tampilan input user dan hasil rekomendasi berdasarkan input tersebut:
   
@@ -465,7 +589,18 @@ $RSP = \frac{RR}{RA}$
 | 3622296   | UNIVERSITAS NEGERI YOGYAKARTA | PENDIDIKAN BAHASA PRANCIS |
 | 3332144   | UNIVERSITAS PADJADJARAN       | SASTRA INGGRIS            |
 
-  Hasil diatas menunjukan bahwa presisi dari sistem rekomendasi dengan teknik Content Based Filtering pada uji coba ini, yakni 5/5 = 100%.
+*Evaluasi Model: Precision*
+Untuk mengevaluasi kinerja sistem rekomendasi ini, digunakan metrik Precision@5, yang menghitung proporsi rekomendasi yang relevan dibandingkan dengan jumlah rekomendasi total (k=5). Dalam contoh evaluasi berikut:
+
+- Recommended IDs: [3562281, 3232135, 3562242, 3622296, 3332144]
+
+- Relevant IDs: [3562281, 3232135, 3562242, 3622296]
+
+Maka nilai Precision dapat dihitung sebagai:
+
+$Precision = \frac{4}{5}$ = 0.8
+
+Hasil ini menunjukkan bahwa 80% dari rekomendasi yang diberikan sesuai dengan preferensi atau jurusan yang relevan, yang menandakan performa sistem yang cukup baik dalam konteks Content-Based Filtering.
 
 2. Model Collaborative Filtering
    
