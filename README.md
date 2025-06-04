@@ -531,12 +531,12 @@ Selanjutnya, hasil dari perhitungan cosine similarity disimpan dalam bentuk Data
 
   Selanjutnya, model collaborative filtering yang telah dilatih sebelumnya digunakan untuk memprediksi skor untuk setiap pasangan pengguna-prodi yang belum dipilih. Sepuluh program studi dengan skor tertinggi dipilih sebagai rekomendasi, kemudian ID program studi tersebut dikonversi kembali menjadi nama program studi. Selain itu, daftar program studi yang telah dipilih oleh pengguna beserta nama universitasnya juga ditampilkan sebagai pembanding terhadap rekomendasi yang diberikan. Akhirnya, daftar 10 program studi rekomendasi bersama dengan nama universitasnya ditampilkan guna membantu pengguna dalam pengambilan keputusan. Proses ini bertujuan untuk memberikan gambaran yang komprehensif mengenai pilihan program studi yang relevan dengan preferensi pengguna, sekaligus menawarkan alternatif yang sesuai berdasarkan model collaborative filtering yang sudah dikembangkan.
   
-  Tabel 3. Input untuk user dengan id 9132037 dan jurusan 'SENI KRIYA' :
+  Tabel 3. Input untuk user dengan id 8969 dan jurusan 'SENI KRIYA' :
 | id_major | id_user | rata_rata_nilai | type       | major_name | capacity | id_university | university_name    | user | prodi |
 |----------|---------|-----------------|------------|------------|----------|---------------|--------------------|------|-------|
 | 21865    | 9132037 | 565.888889      | humanities | SENI KRIYA | 11.0     | 913.0         | ISBI TANAH PAPUA   | 1038 | 1038  |
 
-  Tabel 4. Hasil rekomendasi untuk user dengan id 9132037 dan jurusan 'AKUNTANSI' :
+  Tabel 4. Hasil rekomendasi untuk user dengan id 8969 dan jurusan 'AKUNTANSI' :
 | id_major | id_user | rata_rata_nilai | type       | major_name                | capacity | id_university | university_name                | user | prodi |
 |----------|---------|-----------------|------------|---------------------------|----------|---------------|--------------------------------|------|-------|
 | 21645    | 3642165 | 593.444444      | humanities | SENI PEDALANGAN           | 7.0      | 364.0         | ISI YOGYAKARTA                 | 1036 | 1036  |
