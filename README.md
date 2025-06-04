@@ -531,31 +531,32 @@ Selanjutnya, hasil dari perhitungan cosine similarity disimpan dalam bentuk Data
 
   Selanjutnya, model collaborative filtering yang telah dilatih sebelumnya digunakan untuk memprediksi skor untuk setiap pasangan pengguna-prodi yang belum dipilih. Sepuluh program studi dengan skor tertinggi dipilih sebagai rekomendasi, kemudian ID program studi tersebut dikonversi kembali menjadi nama program studi. Selain itu, daftar program studi yang telah dipilih oleh pengguna beserta nama universitasnya juga ditampilkan sebagai pembanding terhadap rekomendasi yang diberikan. Akhirnya, daftar 10 program studi rekomendasi bersama dengan nama universitasnya ditampilkan guna membantu pengguna dalam pengambilan keputusan. Proses ini bertujuan untuk memberikan gambaran yang komprehensif mengenai pilihan program studi yang relevan dengan preferensi pengguna, sekaligus menawarkan alternatif yang sesuai berdasarkan model collaborative filtering yang sudah dikembangkan.
   
-  Tabel 3. Input untuk user dengan id 8969 dan jurusan 'SENI KRIYA' :
-| id_major | id_user | rata_rata_nilai | type       | major_name | capacity | id_university | university_name    | user | prodi |
-|----------|---------|-----------------|------------|------------|----------|---------------|--------------------|------|-------|
-| 21865    | 9132037 | 565.888889      | humanities | SENI KRIYA | 11.0     | 913.0         | ISBI TANAH PAPUA   | 1038 | 1038  |
+  Tabel 3. Input untuk user dengan id 258842 dan jurusan 'MANAJEMEN' :
+| index | id\_major | id\_user | rata\_rata\_nilai | type       | major\_name | capacity | id\_university | university\_name           | user | prodi |
+| ----- | --------- | -------- | ----------------- | ---------- | ----------- | -------- | -------------- | -------------------------- | ---- | ----- |
+| 44681 | 7412013   | 258842   | 445.888889        | humanities | MANAJEMEN   | 120.0    | 741.0          | UNIVERSITAS SULAWESI BARAT | 1205 | 1205  |
 
-  Tabel 4. Hasil rekomendasi untuk user dengan id 8969 dan jurusan 'AKUNTANSI' :
-| id_major | id_user | rata_rata_nilai | type       | major_name                | capacity | id_university | university_name                | user | prodi |
-|----------|---------|-----------------|------------|---------------------------|----------|---------------|--------------------------------|------|-------|
-| 21645    | 3642165 | 593.444444      | humanities | SENI PEDALANGAN           | 7.0      | 364.0         | ISI YOGYAKARTA                 | 1036 | 1036  |
-| 646      | 3852011 | 551.666667      | humanities | EKONOMI PEMBANGUNAN       | 90.0     | 385.0         | UPN "VETERAN" JAWA TIMUR       | 367  | 367   |
-| 273      | 3552085 | 631.111111      | humanities | AKUNTANSI                 | 138.0    | 355.0         | UNIVERSITAS DIPONEGORO         | 199  | 199   |
-| 304      | 8112025 | 543.000000      | humanities | IL. ADM. NEGARA           | 100.0    | 811.0         | UNIVERSITAS PATTIMURA          | 212  | 212   |
-| 1934     | 3732261 | 567.222222      | humanities | DESAIN KOMUNIKASI VISUAL  | 60.0     | 373.0         | UNIVERSITAS NEGERI MALANG      | 595  | 595   |
-| 918      | 3512157 | 606.888889      | humanities | PENDIDIKAN BAHASA INGGRIS | 30.0     | 351.0         | UNIVERSITAS JENDERAL SOEDIRMAN | 446  | 446   |
-| 419      | 3552031 | 557.888889      | humanities | SEJARAH                   | 40.0     | 355.0         | UNIVERSITAS DIPONEGORO         | 268  | 268   |
-| 18482    | 8112017 | 453.333333      | humanities | IL. HUKUM                 | 275.0    | 811.0         | UNIVERSITAS PATTIMURA          | 996  | 996   |
-| 463      | 3852081 | 599.555556      | humanities | ILMU HUKUM                | 120.0    | 385.0         | UPN "VETERAN" JAWA TIMUR       | 287  | 287   |
-| 19693    | 1222334 | 472.555556      | humanities | ILMU EKONOMI              | 48.0     | 122.0         | UNIVERSITAS NEGERI MEDAN       | 1012 | 1012  |
+  Tabel 4. Hasil rekomendasi untuk user dengan id 258842 dan jurusan 'MANAJEMEN' :
+| index | id\_major | id\_user | rata\_rata\_nilai | type       | major\_name               | capacity | id\_university | university\_name                    | user | prodi |
+| ----- | --------- | -------- | ----------------- | ---------- | ------------------------- | -------- | -------------- | ----------------------------------- | ---- | ----- |
+| 19280 | 9112025   | 129964   | 584.111111        | humanities | ILMU ADMINISTRASI NEGARA  | 18.0     | 911.0          | UNIVERSITAS CENDERAWASIH            | 1007 | 1007  |
+| 15603 | 9112041   | 107461   | 552.333333        | humanities | ILMU HUKUM                | 65.0     | 911.0          | UNIVERSITAS CENDERAWASIH            | 966  | 966   |
+| 462   | 3552015   | 4204     | 555.777778        | humanities | SASTRA INDONESIA          | 60.0     | 355.0          | UNIVERSITAS DIPONEGORO              | 286  | 286   |
+| 416   | 3312035   | 3872     | 556.444444        | humanities | AKUNTANSI                 | 111.0    | 331.0          | UNIVERSITAS SINGAPERBANGSA KARAWANG | 266  | 266   |
+| 517   | 3732245   | 4605     | 588.000000        | humanities | BAHASA DAN SASTRA INGGRIS | 30.0     | 373.0          | UNIVERSITAS NEGERI MALANG           | 319  | 319   |
+| 84    | 3532162   | 769      | 571.777778        | humanities | PENDIDIKAN SEJARAH        | 40.0     | 353.0          | UNIVERSITAS SEBELAS MARET           | 82   | 82    |
+| 111   | 1422062   | 1037     | 569.444444        | humanities | PSIKOLOGI                 | 120.0    | 142.0          | UNIVERSITAS NEGERI PADANG           | 104  | 104   |
+| 5754  | 3642076   | 45028    | 594.777778        | humanities | SENI RUPA MURNI           | 45.0     | 364.0          | ISI YOGYAKARTA                      | 812  | 812   |
+| 1055  | 3642092   | 10558    | 576.222222        | humanities | DESAIN INTERIOR           | 41.0     | 364.0          | ISI YOGYAKARTA                      | 473  | 473   |
+| 112   | 3222102   | 1039     | 588.444444        | humanities | ILMU HUKUM                | 48.0     | 322.0          | UNIVERSITAS ISLAM NEGERI JAKARTA    | 105  | 105   |
+
 
 Berdasarkan tabel di atas, sistem menampilkan jurusan yang relevan dengan skor rata-rata nilai yang dimasukkan oleh pengguna. Sistem rekomendasi ini menyajikan 10 program studi yang belum pernah dipilih oleh pengguna, dengan variasi skor rata-rata nilai mulai dari yang lebih rendah hingga lebih tinggi dibandingkan skor input pengguna. Dengan demikian, pengguna dapat melihat berbagai pilihan jurusan yang sesuai dengan kemampuan mereka berdasarkan rentang skor rekomendasi dari nilai terendah hingga tertinggi
 
 ## Visualisasi Metrik
-![image](https://github.com/user-attachments/assets/c81b738f-a50a-468b-8d9e-143594ca3450)
+![image](https://github.com/user-attachments/assets/73e7103d-4501-4fc7-98d3-07ea463610e9)
 
-Grafik di atas memperlihatkan nilai Root Mean Squared Error (RMSE) pada data training dan testing selama 20 epoch pelatihan model. RMSE adalah metrik evaluasi yang umum digunakan untuk model regresi, yang mengukur seberapa besar rata-rata kesalahan antara prediksi dan nilai aktual.
+Grafik di atas menunjukkan tren Root Mean Squared Error (RMSE) selama proses pelatihan model terhadap jumlah epoch. Terlihat bahwa nilai RMSE pada data pelatihan (train) mengalami penurunan yang cukup signifikan seiring bertambahnya epoch, menunjukkan bahwa model semakin baik dalam mempelajari pola dari data latih. Namun, nilai RMSE pada data pengujian (test) relatif stabil dan tidak menunjukkan penurunan berarti setelah beberapa epoch awal. Perbedaan yang cukup jelas antara kurva pelatihan dan pengujian ini mengindikasikan adanya gejala overfitting, di mana model terlalu menyesuaikan diri terhadap data pelatihan dan kurang mampu melakukan generalisasi terhadap data baru. Oleh karena itu, diperlukan strategi seperti early stopping, regularisasi, atau peningkatan kualitas data untuk mengatasi masalah ini.
 
 # Evaluation
 1. Model Content Based Filtering
@@ -624,6 +625,6 @@ $\hat{y}_i$: nilai prediksi dari model
   
   Root Mean Squared Error (RMSE) merupakan metrik evaluasi yang menghitung akar kuadrat dari rata-rata selisih kuadrat antara nilai yang diprediksi dan nilai aktual. Nilai RMSE yang lebih rendah mengindikasikan bahwa model memiliki tingkat kesalahan prediksi yang kecil, sehingga kualitas prediksinya lebih baik. Oleh karena itu, RMSE sering digunakan untuk menilai performa model regresi maupun sistem rekomendasi. Visualisasi berikut menunjukkan hasil perhitungan RMSE pada model sistem rekomendasi jurusan menggunakan pendekatan collaborative filtering.
   
-![image](https://github.com/user-attachments/assets/756604e6-aa4d-4514-9fb1-b05aa8463455)
+![image](https://github.com/user-attachments/assets/73e7103d-4501-4fc7-98d3-07ea463610e9)
 
-Berdasarkan grafik nilai Root Mean Squared Error (RMSE) terhadap jumlah epoch, terlihat bahwa RMSE pada data pelatihan mengalami fluktuasi di awal, namun cenderung menurun setelah beberapa epoch, yang menunjukkan bahwa model mulai belajar dari data pelatihan secara bertahap. Sementara itu, nilai RMSE pada data pengujian relatif stabil dan tidak mengalami penurunan yang signifikan sepanjang proses pelatihan. Perbedaan antara kurva pelatihan dan pengujian tidak terlalu mencolok, sehingga belum menunjukkan indikasi overfitting yang kuat. Namun, karena performa pada data pengujian tidak membaik seiring bertambahnya epoch, hal ini bisa mengindikasikan bahwa model belum cukup optimal dalam menangkap pola dari data secara umum. Oleh karena itu, perbaikan dapat dilakukan dengan menyesuaikan arsitektur model, melakukan tuning hyperparameter, atau menambahkan data pelatihan untuk meningkatkan kemampuan generalisasi model.
+Grafik di atas menggambarkan perkembangan nilai Root Mean Squared Error (RMSE) pada data pelatihan dan pengujian selama proses training model. Terlihat bahwa nilai RMSE pada data pelatihan menurun secara konsisten, menunjukkan bahwa model mampu mempelajari data dengan baik. Namun, nilai RMSE pada data pengujian cenderung stabil dan tidak mengalami penurunan signifikan. Hal ini menunjukkan bahwa meskipun model semakin akurat terhadap data latih, performanya terhadap data uji tidak meningkat, yang mengindikasikan kemungkinan terjadinya overfitting. Kondisi ini menunjukkan perlunya evaluasi ulang terhadap kompleksitas model atau penerapan teknik untuk meningkatkan generalisasi, seperti regularisasi atau early stopping.
